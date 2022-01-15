@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JustTasks</title>
+  <!--bootstrap code-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!--google font-->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <!--icons-->
+  <script src="https://kit.fontawesome.com/c970526dfe.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!--google login-->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <link rel="icon"
+      type="image/x-icon"
+      href="images/favicon.ico">
+  <meta name="google-signin-client_id" content="850234385228-k93jcv8d7uvii59bmuhek7p60590uepq.apps.googleusercontent.com">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-custom" id="user">
+      <!--<div class="container">-->
+        <h2 class="nav-brand">JustTasks</h2>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><i class="fas fa-align-justify fa-lg" onclick="sideBar()"></i></li>
+        </ul>
+        <ul class="nav justify-content-end">
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img id="userPic" v-bind:src="Pro_pic" alt="profile picture" v-on:load="get_userPro">   {{ Uname }}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i>  Logout</a>
+          </div>
+          </li>
+      </ul>
+      <!--</div>-->
+    </nav>
+  </header>
+  <main class="wrapper">
+  <div id="sidebar">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="main.html"><i class="fas fa-home fa-lg"></i>  Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="openN()"><i class="far fa-bell fa-lg"></i>  Notifications</a>
+        <!--<i class="fas fa-bell"></i>-->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="calendar.html"><i class="far fa-calendar-alt fa-lg"></i>  Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="setting.html"><i class="fas fa-cog fa-lg"></i>  Setting</a>
+      </li>
+    </ul>
+    <div class="team">
+      <i class="fas fa-users"></i><h6> Team </h6><!--i class="fas fa-plus-circle"></i-->
+      <ul class="nav flex-column" id="teamM">
+        <li v-for="mem in team_list"><img v-bind:src="mem.profile_pic" alt="Member's pic">{{ mem.name }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notifi" id="note">
+    <button class="but2" onclick="closeN()">X</button>
+    <h3>Notifications</h3>
+    <hr>
+    <div class="note" v-for="mess in notifi_list">
+      <p>{{ mess.messages }}</p>
+      <small>{{ mess.created }}</small>
+    </div>
+  </div>
+  <div class="container" id="calend">
+    <br>
+    <h3>Calendar</h3>
+    <hr>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-secondary grp" onclick="left()" data-toggle="tooltip" data-placement="top" title="Previous month"><i class="fas fa-caret-left"></i></button>
+      <button type="button" class="btn btn-secondary grp" id="current_m" disabled></button>
+      <button type="button" class="btn btn-secondary grp" onclick="right()" data-toggle="tooltip" data-placement="top" title="Next month"><i class="fas fa-caret-right"></i></button>
+    </div>
+    <table id="calend2" border="1">
+      <thead>
+        <th>Sunday</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+      </thead>
+      <tbody id="calend_days">
+
+      </tbody>
+    </table>
+    <p id="test" onload="get_dates"></p>
+    <br>
+
+  </div>
+  <script src="javascripts/calendaar.js" defer></script>
+  <script src="javascripts/main.js"></script>
+  <script>
+
+
+  </script>
+  </main>
+</body>
+</html>

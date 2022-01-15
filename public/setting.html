@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JustTasks</title>
+  <!--bootstrap code-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!--google font-->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <!--icons-->
+  <script src="https://kit.fontawesome.com/c970526dfe.js" crossorigin="anonymous"></script>
+  <!--stylesheet-->
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!--vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!--dropzone
+  <script src="./path/to/dropzone.js"></script>-->
+  <!--google login-->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta name="google-signin-client_id" content="850234385228-k93jcv8d7uvii59bmuhek7p60590uepq.apps.googleusercontent.com">
+  <link rel="icon"
+      type="image/x-icon"
+      href="images/favicon.ico">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-custom" id="user">
+        <h2 class="nav-brand">JustTasks</h2>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><i class="fas fa-align-justify fa-lg" onclick="sideBar()"></i></li>
+        </ul>
+      <ul class="nav justify-content-end">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img id="userPic" v-bind:src="Pro_pic" alt="profile picture" v-on:load="get_userPro"> {{ Uname }}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i>  Logout</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+<div class="wrapper">
+  <div id="sidebar">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="main.html"><i class="fas fa-home fa-lg"></i>  Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="openN()"><i class="far fa-bell fa-lg"></i>  Notifications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="calendar.html"><i class="far fa-calendar-alt fa-lg"></i>  Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="setting.html"><i class="fas fa-cog fa-lg"></i>  Setting</a>
+      </li>
+    </ul>
+    <div class="team">
+      <i class="fas fa-users"></i><h6> Team </h6><!--i class="fas fa-plus-circle"></i-->
+      <ul class="nav flex-column" id="teamM">
+        <li v-for="mem in team_list"><img v-bind:src="mem.profile_pic" alt="Member's pic">{{ mem.name }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notifi" id="note">
+    <button class="but2" onclick="closeN()">X</button>
+    <h3>Notifications</h3>
+    <hr>
+    <div class="note" v-for="mess in notifi_list">
+      <p>{{ mess.messages }}</p>
+      <small>{{ mess.created }}</small>
+    </div>
+  </div>
+  <div class="container" id="setting" >
+    <div class="col-sm-2" id="tabs">
+       <!--<a href="setting.html">Profile</a>
+      <a href="setting_b.html">Account</a>-->
+
+      <a v-on:click="switch2" v-bind:class="{active2:profileTog}">Profile</a>
+      <a v-on:click="switch1" v-bind:class="{active2:accountTog}">Account</a>
+    </div>
+  <div class="row">
+    <div class="col profileSet" v-if="profileTog">
+      <h4>Profile Settings</h4>
+      <form>
+        <div class="form-group row contain">
+          <label for="staticEmail" class="col-sm-2 col-form-label" >Name</label>
+          <div class="col-sm-8">
+            <input id="textbox" class="form-control" type="text" v-model="Uname">
+          </div>
+        </div>
+        <div class="form-group row contain">
+          <label for="profile_pic" class="col-sm-2 col-form-label">Profile Picture</label>
+          <img v-bind:src="userpic" alt="user pic">
+          <!--i class="far fa-edit fa-lg" data-toggle="tooltip" data-placement="top" title="Edit Profile Picture"></i-->
+        </div>
+        <div class="form-group row">
+          <label for="role" class="col-sm-2 col-form-label">Role</label>
+          <div class="col-sm-8">
+          <input id="textbox" class="form-control" type="text" v-model="role">
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-8">
+          <button id="save" type="button" class="btn btn-success" v-on:click="saveChange">Save changes</button>
+          <p style="color:green;font-size:1.3rem;">{{ saveNotice }}</p>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="col accountSet" v-else id="accSET">
+      <h4>Account Settings</h4>
+      <form>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-8">
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail" v-model="usermail">
+          </div>
+        </div>
+        <hr>
+        <h6><b>Change Password</b></h6>
+        <p><br>Enter your existing password to verify and your new password</p>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Existing Password</label>
+          <div class="col-sm-4">
+            <input type="password" class="form-control" id="inputPassword" v-model="passWord">
+            <p style="color:red;" v-show="wrongPass">Password is incorrect.</p>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">New Password</label>
+          <div class="col-sm-4">
+            <input type="password" class="form-control" id="inputPassword" v-model="new_passWord1">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Confirm New Password</label>
+          <div class="col-sm-4">
+            <input type="password" class="form-control" id="inputPassword" v-model="new_passWord2">
+            <p style="color:red;" v-show="passwordNotSame">New password is not the same as the previous input.</p>
+          </div>
+        </div>
+      </form>
+        <!--div class="row"><h6 style="font-weight:500;"><b>Calendar</b></h6></div>
+        <p style="margin:0">Click below to sync with your google calendar and add tasks to it automatically</p>
+        <div class="row"><button type="button" class="btn btn-info" id="connectCal">Connect to <i class="fab fa-google-plus fa-lg"></i>oogle Calendar</button></div-->
+        <button id="save" type="button" class="btn btn-success" v-on:click="saveNewPass">Save changes</button>
+        <p style="color:green;font-size:1.3rem;">{{ saveNotice2 }}</p>
+    </div>
+
+  </div>
+
+</div>
+</div>
+  <script src="javascripts/main.js"></script>
+  <script src="javascripts/setting.js"></script>
+  </main>
+</body>
+</html>

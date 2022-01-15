@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JustTasks</title>
+  <!--bootstrap code-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!--google-font-->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c970526dfe.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!--vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!--google login-->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta name="google-signin-client_id" content="850234385228-k93jcv8d7uvii59bmuhek7p60590uepq.apps.googleusercontent.com">
+  <link rel="icon"
+      type="image/x-icon"
+      href="images/favicon.ico">
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-custom" id="user">
+
+        <h2 class="nav-brand">JustTasks</h2>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><i class="fas fa-align-justify fa-lg" onclick="sideBar()"></i></li>
+        </ul>
+        <ul class="nav justify-content-end">
+          <!--li class="nav-item"><input class="form-control form-control-sm" id="searchbar" type="search" placeholder="Search" aria-label="Search"></li>
+          <li class="nav-item"><i class="fas fa-search"></i></li-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" onload="getProf()" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="userPic" v-bind:src="Pro_pic" alt="profile picture" v-on:load="get_userPro()">  {{ Uname }}
+            </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i>  Logout</a>
+          </div>
+          </li>
+      </ul>
+
+    </nav>
+  </header>
+  <main class="wrapper">
+  <div id="sidebar">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="main.html"><i class="fas fa-home fa-lg"></i>  Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="openN()"><i class="far fa-bell fa-lg"></i>  Notifications</a>
+        <!--<i class="fas fa-bell"></i>-->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="calendar.html"><i class="far fa-calendar-alt fa-lg"></i>  Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="setting.html"><i class="fas fa-cog fa-lg"></i>  Setting</a>
+      </li>
+    </ul>
+    <div class="team" id="teamM">
+      <i class="fas fa-users"></i><h6> Team </h6><!--i class="fas fa-plus-circle" v-on:click="add_on=true"></i>
+      <div class="input-group input-group-sm mb-3" v-if='add_on'>
+        <input class="form-control" v-model="addperson">
+        <button type="button" class="btn btn-light btn-sm" v-on:click="add_p">Add</button>
+      </div-->
+      <ul class="nav flex-column" >
+        <li v-for="mem in team_list"><img v-bind:src="mem.profile_pic" alt="Member's pic">{{ mem.name }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notifi" id="note">
+    <button class="but2" onclick="closeN()">X</button>
+    <h3>Notifications</h3>
+    <hr>
+    <div class="note" v-for="mess in notifi_list">
+      <p>{{ mess.messages }}</p>
+      <small>{{ mess.created }}</small>
+    </div>
+  </div>
+  <div class="notifi" id="userDetail">
+    <button class="but2" onclick="closeN2()">X</button>
+    <h3></h3>
+    <hr>
+    <div class="note" v-for="">
+
+    </div>
+  </div>
+  <div class="container" id="content">
+    <br>
+    <h3>Home</h3>
+    <hr>
+    <div id="function" v-if="isManager==false">
+      <button class="btn btn-secondary marktask2" href="#" role="button" v-on:click="completeTask()"><i class="fas fa-check"></i> Mark task complete</button>
+      <i class="fas fa-eye-slash fa-lg" data-toggle="tooltip" data-placement="top" title="Toggle incomplete tasks" v-if="showT==false" v-on:click="showT=true"></i>
+      <i class="fas fa-eye fa-lg" data-toggle="tooltip" data-placement="top" title="Toggle incomplete tasks" v-if="showT==true" v-on:click="showT=false"></i>
+    </div>
+    <div id="function" v-if="isManager==true">
+      <button type="submit" class="btn btn-success" id="saveTask" v-on:click="saveNewTask" disabled>Save</button>
+      <button class="btn btn-secondary marktask2" href="#" role="button" v-on:click="createTask()"><i class="fas fa-plus"></i> Create task</button>
+      <div v-if="assign_check==true" style="display:inline">
+        <button class="btn btn-secondary marktask2 dropdown-toggle" type="button" id="assign_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user-edit"></i> Assign task
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+          <!--a class="dropdown-item" href="#" v-on:click="assign_person='--'">--</a-->
+          <a v-for="person in team_mem" class="dropdown-item" href="#" v-on:click="assign_person=person.name;assignTask();">{{ person.name }}</a>
+        </div>
+      </div>
+      <button class="btn btn-secondary marktask2" href="#" role="button" v-on:click="completeTask()"><i class="fas fa-check"></i > Mark task compete</button>
+      <button class="btn btn-secondary marktask2" href="#" role="button" v-if="assign_check==false" v-on:click="assign_check=true"><i class="fas fa-user-edit"></i> Assign task</button>
+      <i class="fas fa-eye-slash fa-lg" data-toggle="tooltip" data-placement="top" title="Toggle incomplete tasks" v-if="showT==false" v-on:click="showT=true"></i>
+      <i class="fas fa-eye fa-lg" data-toggle="tooltip" data-placement="top" title="Toggle incomplete tasks" v-if="showT==true" v-on:click="showT=false"></i>
+    </div>
+    <!--
+    <div id="sort_filter">
+      <div class="drop-menu-sort">
+        <a href="#"><i onclick="togSort" class="fas fa-sort-amount-down fa-lg">Sort</i></a>
+        <div>
+          <a class="dropdown-item" href="#">Alphabetcal</a>
+          <a class="dropdown-item" href="#">Priority</a>
+          <a class="dropdown-item" href="#">Due Due</a>
+        </div>
+      </div>
+      <div class="drop-menu-sort">
+        <a href="#"><i class="fas fa-filter fa-lg">Filter</i></a>
+        <div>
+          <a href="">User</a>
+          <a href="">Priority</a>
+          <a href="">Due Date</a>
+          <input type="text">
+        </div>
+      </div>
+    </div>-->
+    <div class="overf">
+    <table class="tlist" id="tlist1">
+      <thead>
+        <th></th>
+        <th></th>
+        <th>Today's tasks</th>
+        <th>Assign to</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+      </thead>
+      <tbody id="tasks">
+        <tr v-if="newT">
+        <th></th>
+        <th></th>
+        <form id="test">
+          <td class="tname"><input id="tname" placeholder="task name" pattern={100} title="up to 100 characters only"></td>
+          <td class="tassig">---</td>
+          <td class="tassign" ><select id="priority">
+              <option selected value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </td>
+          <td class="tassign"><select id="days"><option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="8">7</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="17">16</option>
+          </select>
+          <select id="months"><option value="1">Jan</option>
+          <option value="2">Feb</option>
+          <option value="3">Mar</option>
+          <option value="4">Apr</option>
+          <option value="5">May</option>
+          </select>
+          <select id="years"><option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+          </select></td>
+        </form>
+        </tr>
+        <tr v-if="(task_list2.length==0)">
+          <th></th>
+          <th></th>
+          <td class="tname">no tasks left</td>
+          <td class="tassign"></td>
+          <td class="tassign"></td>
+          <td class="tassign"></td>
+        </tr>
+        <tr v-for="(item,index) in task_list2" class="aItem" v-if="((!(completed.includes(item.task_id)) && showT==false)||showT==true)">
+          <th><input type="checkbox" aria-label="Checkbox for task" v-bind:value="item.task_id" v-model="assign_list" v-if="assign_check"></th>
+          <th><input type="checkbox" aria-label="Checkbox for task" v-bind:value="item.task_id" v-model="completed"></th>
+          <td class="tname" v-bind:value="index" v-on:mouseover="task_index=index">{{ item.task_name }}<a v-on:click="detail_look2()" href="#" id="D" data-toggle="tooltip" data-placement="top" title="Click to see task details">Details &#62;</a></td>
+          <td class="tassign">{{ item.name }}</td>
+          <td class="tassign">{{ item.priority }}</td>
+          <td class="tassign">{{ item.due_date }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+    <!--
+    <table class="tlist" id="tlist2">
+      <thead>
+        <th> </th>
+        <th>Other tasks</th>
+        <th> </th>
+        <th> </th>
+        <th> </th>
+      </thead>
+     <tbody>
+      <tr value="">
+        <th><input type="checkbox" aria-label="Checkbox for following text input"></th>
+        <td class="tname">task.name<a onclick="detail_look2()" href="#" data-toggle="tooltip" data-placement="top" title="Click to see task details" >Details &#62;</a></td>
+        <td class="tassign">task.assignTo</td>
+        <td class="tassign">priority</td>
+        <td class="tassign">due date</td>
+      </tr>
+    </tbody>
+    </table>-->
+  </div>
+  </div>
+  <div class="detail" id="detail1">
+    <button class="but2" onclick="vueinst.detail_look(event)">X</button>
+    <h4>Task Details</h4>
+    <hr>
+
+    <dl class="row">
+      <dt class="col-sm-3">Task Name:</dt>
+      <dd class="col-sm-9" id="t_name">{{ itemTask.task_name }}</dd>
+
+      <dt class="col-sm-3">Description:</dt>
+      <dd class="col-sm-9" id="t_descr">{{ itemTask.description }}</dd>
+
+      <dt class="col-sm-3" >Due Date:</dt>
+      <dd class="col-sm-9" id="t_date">{{ itemTask.due_date }}</dd>
+
+      <dt class="col-sm-3">Priority:</dt>
+      <dd class="col-sm-9" id="t_prior">{{ itemTask.priority }}</dd>
+
+      <dt class="col-sm-3">Assignees:</dt>
+      <dd class="col-sm-9" >{{ itemTask.name  }}</dd>
+
+    </dl>
+  </div>
+  <div class="detail" id="detail2">
+    <button class="but2" onclick="vueinst.detail_look(event)">X</button>
+    <h4>Task Details</h4>
+    <hr>
+
+    <dl class="row">
+      <dt class="col-sm-3">Task Name:</dt>
+      <dd class="col-sm-9" id="t_name"><input v-model="itemTask.task_name"></dd>
+      <hr>
+      <dt class="col-sm-3">Description:</dt>
+      <dd class="col-sm-9" id="t_descr"><textarea v-model="itemTask.description"></textarea></dd>
+
+      <dt class="col-sm-3" >Due Date:</dt>
+      <dd class="col-sm-9" id="t_date">{{ itemTask.due_date }}</dd>
+
+      <dt class="col-sm-3">Priority:</dt>
+      <dd class="col-sm-9" id="t_prior">
+        <select id="priority" v-model="itemTask.priority">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </dd>
+
+      <dt class="col-sm-3">Assignees:</dt>
+      <dd class="col-sm-9" >{{ itemTask.name  }}</dd>
+      <button class="btn btn-success" style="margin-left:60%" v-on:click="saveEdit">Save Changes</button>
+    </dl>
+  </div>
+  <script src="javascripts/main.js" defer></script>
+  <script src="javascripts/TASK.js" defer></script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "webcomp-project",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "argon2": "^0.26.2",
+    "argon2-ffi": "^1.2.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "debug": "~2.6.9",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "google-auth-library": "^6.0.1",
+    "googleapis": "^39.2.0",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "sanitize-html": "^1.26.0",
+    "sql": "^0.78.0"
+  }
+}
